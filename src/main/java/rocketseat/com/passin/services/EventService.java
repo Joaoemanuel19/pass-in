@@ -8,9 +8,7 @@ import rocketseat.com.passin.domain.event.exceptions.EventFullException;
 import rocketseat.com.passin.domain.event.exceptions.EventNotFoundException;
 import rocketseat.com.passin.dto.attendee.AttendeeIdDTO;
 import rocketseat.com.passin.dto.attendee.AttendeeRequestDTO;
-import rocketseat.com.passin.dto.event.EventIdDTO;
-import rocketseat.com.passin.dto.event.EventRequestDTO;
-import rocketseat.com.passin.dto.event.EventResponseDTO;
+import rocketseat.com.passin.dto.event.*;
 import rocketseat.com.passin.repositories.EventRepository;
 
 import java.text.Normalizer;
@@ -23,10 +21,25 @@ public class EventService {
     private final EventRepository eventRepository;
     private final AttendeeService attendeeService;
 
+    public List<Event> findAll(){
+        return this.eventRepository.findAll();
+    }
+
     public EventResponseDTO getEventDetail(String eventId){
         Event event = this.getEventById(eventId);
         List<Attendee> attendeeList = this.attendeeService.getAllAttendeesFromEvent(eventId);
         return new EventResponseDTO(event, attendeeList.size());
+    }
+
+    public EventsListResponseDTO getAllEvents(){
+        List<Event> eventsList = this.findAll();
+
+        List<EventDetailDTO> eventDetailList = eventsList.stream().map(event -> {
+            List<Attendee> attendeeList = this.attendeeService.getAllAttendeesFromEvent(event.getId());
+            return new EventDetailDTO(event.getId(), event.getTitle(), event.getDetails(), event.getSlug(), event.getMaximumAttendees(), attendeeList.size());
+        }).toList();
+
+        return new EventsListResponseDTO(eventDetailList);
     }
 
     public EventIdDTO createEvent(EventRequestDTO eventDTO){

@@ -10,8 +10,11 @@ import rocketseat.com.passin.dto.attendee.AttendeesListResponseDTO;
 import rocketseat.com.passin.dto.event.EventIdDTO;
 import rocketseat.com.passin.dto.event.EventRequestDTO;
 import rocketseat.com.passin.dto.event.EventResponseDTO;
+import rocketseat.com.passin.dto.event.EventsListResponseDTO;
 import rocketseat.com.passin.services.AttendeeService;
 import rocketseat.com.passin.services.EventService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/events")
@@ -33,6 +36,12 @@ public class EventController {
         var uri = uriComponentsBuilder.path("/events/{id}").buildAndExpand(eventIdDTO.eventId()).toUri();
 
         return ResponseEntity.created(uri).body(eventIdDTO);
+    }
+    
+    @GetMapping("/all")
+    public ResponseEntity<EventsListResponseDTO> getAllEvents() {
+        EventsListResponseDTO eventsListResponseDTO = this.eventService.getAllEvents();
+        return ResponseEntity.ok(eventsListResponseDTO);
     }
 
     @PostMapping("/{eventId}/attendees")
