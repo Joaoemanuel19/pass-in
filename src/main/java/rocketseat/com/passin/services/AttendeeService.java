@@ -64,7 +64,7 @@ public class AttendeeService {
 
         var uri = uriComponentsBuilder.path("/attendees/{attendeeId}/badge").buildAndExpand(attendeeId).toUri().toString();
 
-        AttendeeBadgeDTO attendeeBadgeDTO = new AttendeeBadgeDTO(attendee.getName(), attendee.getEmail(), uri, attendee.getEvent().getId());
+        AttendeeBadgeDTO attendeeBadgeDTO = new AttendeeBadgeDTO(attendee.getEvent().getTitle(), attendee.getName(), attendee.getEmail(), uri, attendee.getEvent().getId());
         return new AttendeeBadgeResponseDTO(attendeeBadgeDTO);
     }
 }
